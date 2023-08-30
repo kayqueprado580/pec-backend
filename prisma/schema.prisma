@@ -13,35 +13,38 @@ model User {
   name      String
   username  String     @unique
   password  String
-  register  Register[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  Category  Category[]
+  register  Register[]
 
   @@map("users")
 }
 
 model Category {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
+  id          Int        @id @default(autoincrement())
+  name        String
   description String
-  register    Register?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  register    Register[]
+  user        User       @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   @@map("categories")
 }
 
 model Register {
   id          Int      @id @default(autoincrement())
-  name        String   @unique
+  name        String
   type        String
   value       String
   date        DateTime
   pago        Boolean
   category    Category @relation(fields: [categoryId], references: [id])
-  categoryId  Int      @unique
+  categoryId  Int
   user        User     @relation(fields: [userId], references: [id])
-  userId      Int      @unique
+  userId      Int
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
