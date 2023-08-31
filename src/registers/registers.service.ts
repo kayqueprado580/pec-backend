@@ -27,10 +27,8 @@ export class RegisterService {
 
 
 	async findAll(skip: number, take: number, orderBy: boolean, userId: number, startDate?: Date, endDate?: Date) {
-		if (!startDate)
-			startDate = startOfMonth(new Date())
-		if (!endDate)
-			endDate = endOfMonth(new Date())
+
+		const dates = this.checkDates(startDate, endDate);
 
 		return await this.prisma.register.findMany({
 			skip: skip ? skip : 0,
@@ -41,9 +39,9 @@ export class RegisterService {
 			where: {
 				userId: userId,
 				date: {
-          gte: startDate,
-          lte: endDate,
-        },
+					gte: dates.startDate,
+					lte: dates.endDate,
+				},
 			}
 		})
 	}
@@ -92,6 +90,39 @@ export class RegisterService {
 				id,
 			}
 		})
+	}
+
+	async getRegistersDashboard(userId: number, startDate?: Date, endDate?: Date) {
+		const dates = this.checkDates(startDate, endDate);
+		return await this.prisma.register.findMany({
+			where: {
+				userId: userId,
+				date: {
+					gte: dates.startDate,
+					lte: dates.endDate,
+				},
+			}
+		})
+	}
+
+	private checkDates(start: Date, end: Date) {
+		let startDate = start;
+		let endDate = end;
+
+		if (!start || isNaN(start.getTime()))
+			startDate = startOfMonth(new Date())
+
+		if (!end || isNaN(end.getTime()))
+			endDate = endOfMonth(new Date())
+
+		if (endDate <= startDate)
+			throw new Error('The end date must be greater than the start date!');
+
+
+		return {
+			startDate: startDate,
+			endDate: endDate
+		}
 	}
 
 	private async checkRegisterExists(id: number) {

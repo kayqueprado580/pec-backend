@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { CategoriesModule } from './categories/categories.module';
 import { RegistersModule } from './registers/registers.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { RegistersModule } from './registers/registers.module';
     AuthModule,
     CategoriesModule,
     RegistersModule,
+    DashboardModule
   ],
   controllers: [AuthController, AppController],
   providers: [AppService],

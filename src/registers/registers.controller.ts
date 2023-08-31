@@ -23,7 +23,17 @@ export class RegisterController {
     const skp = parseInt(skip, 10)
     const tk = parseInt(take, 10)
 
-    return await this.registerService.findAll(skp, tk, orderBy, id, start, end)
+    try {
+      return await this.registerService.findAll(skp, tk, orderBy, id, start, end)
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR, {
+        cause: error
+      });
+    }
+    // return await this.registerService.findAll(skp, tk, orderBy, id, start, end)
   }
 
   @Post()

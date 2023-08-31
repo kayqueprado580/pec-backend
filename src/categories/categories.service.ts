@@ -1,21 +1,21 @@
-import { Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CategoryDTO } from './dto/category.dto';
 
 @Injectable()
 export class CategoryService {
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(data: CategoryDTO, userId: number) {
 
-		const category = await this.prisma.category.create({
-			data: {
-				...data,
-				userId: userId,
-			},
-		})
-    
+    const category = await this.prisma.category.create({
+      data: {
+        ...data,
+        userId: userId,
+      },
+    })
+
     return {
       category
     }
@@ -29,16 +29,15 @@ export class CategoryService {
       orderBy: {
         id: orderBy ? 'asc' : 'desc',
       },
-			where: {
-				userId: userId
-			}
+      where: {
+        userId: userId
+      }
     })
   }
 
   async findOne(id: number) {
     const categoryExists = await this.checkCategoryExists(id)
-    if(!categoryExists)
-    {
+    if (!categoryExists) {
       throw new Error("Category does not exists!");
     }
 
@@ -51,16 +50,15 @@ export class CategoryService {
 
   async update(id: number, data: CategoryDTO, userId: number) {
     const categoryExists = await this.checkCategoryExists(id)
-    if(!categoryExists)
-    {
+    if (!categoryExists) {
       throw new Error("Category does not exists!");
     }
 
     return await this.prisma.category.update({
       data: {
-				...data,
-				userId: userId,
-			},
+        ...data,
+        userId: userId,
+      },
       where:
       {
         id,
@@ -70,8 +68,7 @@ export class CategoryService {
 
   async remove(id: number) {
     const categoryExists = await this.checkCategoryExists(id)
-    if(!categoryExists)
-    {
+    if (!categoryExists) {
       throw new Error("Category does not exists!");
     }
 
@@ -82,8 +79,15 @@ export class CategoryService {
     })
   }
 
-  private async checkCategoryExists(id: number)
-  {
+  async getCategoriesDashboard(userId: number) {
+    return await this.prisma.category.findMany({
+      where: {
+        userId: userId
+      }
+    })
+  }
+
+  private async checkCategoryExists(id: number) {
     const categoryExists = await this.prisma.category.findUnique({
       where: {
         id,
