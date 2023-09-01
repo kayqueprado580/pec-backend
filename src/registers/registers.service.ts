@@ -26,9 +26,45 @@ export class RegisterService {
 	}
 
 
-	async findAll(skip: number, take: number, orderBy: boolean, userId: number, startDate?: Date, endDate?: Date) {
+	async findAll(
+		skip: number,
+		take: number,
+		orderBy: boolean,
+		userId: number,
+		startDate?: Date,
+		endDate?: Date,
+		category?: number,
+		name?: string,
+		type?: string
+	) {
 
 		const dates = this.checkDates(startDate, endDate);
+
+		const where: any = {
+			userId: userId,
+			date: {
+				gte: dates.startDate,
+				lte: dates.endDate,
+			},
+		}
+
+		if (category) {
+			where.categoryId = category
+			//To do multiple select category id
+			// where.categoryId = {
+			// 	in: category,
+			// }
+		}
+
+		if (name) {
+			where.name = {
+				contains: name,
+			}
+		}
+
+		if (type) {
+			where.type = type
+		}
 
 		return await this.prisma.register.findMany({
 			skip: skip ? skip : 0,
@@ -36,14 +72,24 @@ export class RegisterService {
 			orderBy: {
 				id: orderBy ? 'asc' : 'desc',
 			},
-			where: {
-				userId: userId,
-				date: {
-					gte: dates.startDate,
-					lte: dates.endDate,
-				},
-			}
+			where: where,
 		})
+
+
+		// return await this.prisma.register.findMany({
+		// 	skip: skip ? skip : 0,
+		// 	take: take ? take : 20,
+		// 	orderBy: {
+		// 		id: orderBy ? 'asc' : 'desc',
+		// 	},
+		// 	where: {
+		// 		userId: userId,
+		// 		date: {
+		// 			gte: dates.startDate,
+		// 			lte: dates.endDate,
+		// 		},
+		// 	}
+		// })
 	}
 
 	async findOne(id: number) {

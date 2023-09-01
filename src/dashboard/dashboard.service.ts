@@ -46,10 +46,9 @@ export class DashboardService {
         return total + parsedValue;
       }, 0);
 
-      result.push({
-        type: registerType,
-        total: totalAmount
-      })
+      result.push(
+        totalAmount
+      )
     }
 
     return result

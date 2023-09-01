@@ -40,7 +40,7 @@ export class DashboardController {
 
 		const expenseTotal = this.dashboardService.getValueTotal(registers, 'expense')
 		const revenueTotal = this.dashboardService.getValueTotal(registers, 'revenue')
-		const balanceTotal = revenueTotal[0].total - expenseTotal[0].total
+		const balanceTotal = revenueTotal[0] - expenseTotal[0]
 
 		if (balanceTotal < 0)
 			isBalancePositive = false

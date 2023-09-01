@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { UserDTO } from './dto/user.dto'
 import { AuthGuard } from '../auth/auth.guard';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
 

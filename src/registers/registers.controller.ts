@@ -15,16 +15,21 @@ export class RegisterController {
     @Query('orderBy') orderBy: boolean,
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
+    @Query('category') category: string,
+    @Query('name') name: string,
+    @Query('type') type: string,
     @Req() req: any
   ) {
+
     const id = parseInt(req.user.sub, 10)
     const start = new Date(startDate)
     const end = new Date(endDate)
     const skp = parseInt(skip, 10)
     const tk = parseInt(take, 10)
+    const categoryId = parseInt(category, 10)
 
     try {
-      return await this.registerService.findAll(skp, tk, orderBy, id, start, end)
+      return await this.registerService.findAll(skp, tk, orderBy, id, start, end, categoryId, name, type)
     } catch (error) {
       throw new HttpException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
