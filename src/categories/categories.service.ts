@@ -22,16 +22,25 @@ export class CategoryService {
   }
 
 
-  async findAll(skip: number, take: number, orderBy: boolean, userId: number) {
+  async findAll(skip: number, take: number, orderBy: boolean, userId: number, name?: string) {
+
+    const where: any = {
+			userId: userId,
+		}
+
+    if (name) {
+			where.name = {
+				contains: name,
+			}
+		}
+
     return await this.prisma.category.findMany({
       skip: skip ? skip : 0,
       take: take ? take : 20,
       orderBy: {
         id: orderBy ? 'asc' : 'desc',
       },
-      where: {
-        userId: userId
-      }
+			where: where,
     })
   }
 

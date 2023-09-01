@@ -9,9 +9,18 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) { }
 
   @Get()
-  async findAll(@Query() query: any, @Req() req: any) {
+  async findAll(
+    @Query('skip') skip: string,
+    @Query('take') take: string,
+    @Query('orderBy') orderBy: boolean,
+    @Query('name') name: string,
+    @Req() req: any
+  ) {
+
     const userId = parseInt(req.user.sub, 10)
-    return await this.categoryService.findAll(parseInt(query.skip), parseInt(query.take), query.orderBy, userId)
+    const skp = parseInt(skip, 10)
+    const tk = parseInt(take, 10)
+    return await this.categoryService.findAll(skp, tk, orderBy, userId, name)
   }
 
   @Post()
