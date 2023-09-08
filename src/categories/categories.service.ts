@@ -38,7 +38,7 @@ export class CategoryService {
       skip: skip ? skip : 0,
       take: take ? take : 20,
       orderBy: {
-        id: orderBy ? 'asc' : 'desc',
+        updatedAt: orderBy ? 'asc' : 'desc',
       },
 			where: where,
     })

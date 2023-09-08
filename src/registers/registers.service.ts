@@ -70,7 +70,7 @@ export class RegisterService {
 			skip: skip ? skip : 0,
 			take: take ? take : 20,
 			orderBy: {
-				id: orderBy ? 'asc' : 'desc',
+				date: orderBy ? 'asc' : 'desc',
 			},
 			where: where,
 		})
@@ -163,7 +163,6 @@ export class RegisterService {
 
 		if (endDate <= startDate)
 			throw new Error('The end date must be greater than the start date!');
-
 
 		return {
 			startDate: startDate,
