@@ -8,6 +8,7 @@ Projeto dedicado a persistencia de dados para o sistema de finanças PEC
 * Persistencia de dados Usuários
 * Persistencia de dados Registros
 * Persistencia de dados Categorias
+* Report com dados de registros x categoria para balanço, saldo, total gasto, total recebido
 
 ## Tipo Aplicação
 * API HTTP
