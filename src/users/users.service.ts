@@ -41,6 +41,11 @@ export class UsersService {
 			throw new Error("User or email exists!");
 		}
 
+		const pwdLength = userDTO.password.trim().length;
+		if (!userDTO.password || userDTO.password == '' || (pwdLength < 4 || pwdLength > 8)) {
+			throw new Error("Password matching expression. Password must be at least 4 characters, no more than 8 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit.");
+		}
+
 		const hash = await bcrypt.hash(userDTO.password, 10)
 		const data: Prisma.UserCreateInput = {
 			...userDTO,
@@ -56,20 +61,27 @@ export class UsersService {
 	}
 
 	async update(id: number, userDTO: UserDTO): Promise<User> {
-		const userExists = await this.checkUserExists(id)
-		if (!userExists) {
+		const userFind = await this.findUniqueUser(id)
+		if (!userFind) {
 			throw new Error("User does not exists!");
 		}
 
-		const alredyUserOrEmailExists = await this.checkAlredyUserOrEmailExists(userDTO.username, userDTO.email)
-		if (alredyUserOrEmailExists) {
-			throw new Error("User or email exists!");
+		const usernameHasChanged = this.checkHasChanged(userFind.username, userDTO.username)
+		if (usernameHasChanged) {
+			const alredyUserExists = await this.checkAlredyUserExists(userDTO.username)
+			if (alredyUserExists)
+				throw new Error("User exists!");
 		}
 
-		const hash = await bcrypt.hash(userDTO.password, 10)
-		const data: Prisma.UserCreateInput = {
-			...userDTO,
-			password: hash
+		const emailHasChanged = this.checkHasChanged(userFind.email, userDTO.email)
+		if (emailHasChanged) {
+			const alredyEmailExists = await this.checkAlredyEmailExists(userDTO.email)
+			if (alredyEmailExists)
+				throw new Error("Email exists!");
+		}
+
+		const data: Prisma.UserUpdateInput = {
+			...userDTO
 		}
 
 		const updatedUser = await this.prisma.user.update({
@@ -125,8 +137,41 @@ export class UsersService {
 				email,
 			}
 		})
+
 		const exists = usrExists || emailExists ? true : false
 		return exists
+	}
+
+	private async checkAlredyUserExists(username: string) {
+		const usrExists = await this.prisma.user.findUnique({
+			where: {
+				username,
+			}
+		})
+		return usrExists ? true : false
+	}
+
+	private async checkAlredyEmailExists(email: string) {
+		const emailExists = await this.prisma.user.findUnique({
+			where: {
+				email,
+			}
+		})
+		return emailExists ? true : false
+	}
+
+	private checkHasChanged(base: string, input: string) {
+		if (base != input)
+			return true
+		return false
+	}
+
+	private async findUniqueUser(id: number) {
+		return await this.prisma.user.findUnique({
+			where: {
+				id,
+			}
+		})
 	}
 
 }

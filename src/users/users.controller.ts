@@ -3,12 +3,12 @@ import { UsersService } from './users.service';
 import { UserDTO } from './dto/user.dto'
 import { AuthGuard } from '../auth/auth.guard';
 
-@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
 
 	constructor(private readonly usersService: UsersService) { }
 
+	@UseGuards(AuthGuard)
 	@Get()
 	async findAll() {
 		return await this.usersService.findAll()
@@ -28,6 +28,7 @@ export class UsersController {
 		}
 	}
 
+	@UseGuards(AuthGuard)
 	@Get(':id')
 	async findOne(@Param('id') id: string) {
 		try {
@@ -42,6 +43,7 @@ export class UsersController {
 		}
 	}
 
+	@UseGuards(AuthGuard)
 	@Patch(':id')
 	async update(@Param('id') id: string, @Body() userDTO: UserDTO) {
 		try {
@@ -56,6 +58,7 @@ export class UsersController {
 		}
 	}
 
+	@UseGuards(AuthGuard)
 	@Delete(':id')
 	async remove(@Param('id') id: string) {
 		try {
