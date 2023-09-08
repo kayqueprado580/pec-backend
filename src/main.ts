@@ -12,10 +12,10 @@ async function bootstrap() {
 
    // Configuração do CORS para permitir "localhost"
   const configService = app.get(ConfigService);
-  const allowedOrigins: string[] = [configService.get('ALLOWED_ORIGIN', 'http://localhost:3000')];
+  // const allowedOrigins: string[] = [configService.get('ALLOWED_ORIGIN', 'http://localhost:3000')];
   const corsOptions: CorsOptions = {
-    // origin: true,
-    origin: allowedOrigins,
+    origin: true,
+    // origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: true,
