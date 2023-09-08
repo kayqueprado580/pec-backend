@@ -16,6 +16,7 @@ Projeto dedicado a persistencia de dados para o sistema de finanças PEC
 ## Stack
 * Javascript
 * Typescript
+* NodeJS
 * NestJS
 
 ## Instalação
